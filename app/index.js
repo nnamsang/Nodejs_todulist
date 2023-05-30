@@ -1,7 +1,9 @@
 //console.log("day là code như chim");
 const yargs = require("yargs");
 const fs=require("fs");
-const {taskAllRead,createTask}=require("./model/task");
+const {taskAllRead,createTask,readDetialTask,updateTask,
+deleteTask}=require("./model/task");
+const chalk =require("chalk");
 //const yargr = require("yargs");
 yargs.command({
     command : "test",
@@ -32,9 +34,9 @@ yargs.command({
         
     },
 });
-//read_detail node app/index.js read_all 
+//read_detail node app/index.js read_detail 
 yargs.command({
-    command:"read_detial",
+    command:"read_detail",
     builder:{
         id:{
             type:"string",
@@ -42,8 +44,12 @@ yargs.command({
     },
     handler:(args)=>{
         const{id}=args;
-        console.log("id ",id);
-        console.log("read_detail");    
+        const task=readDetialTask(id);
+        if(task){
+            console.log("task: ",task);
+        }else{
+            console.log(chalk.blue("not find"));
+        }
     },
 });
 //read_all
@@ -72,11 +78,13 @@ yargs.command({
     },
     handler:(args)=>{
         const{id,title,description}=args;
-        console.log("id ",id,"titel",title,"description",description);
-        console.log("Update");
+        const task=updateTask(id,title,description);
+        if(task)console.log("task: ",task);
+        else console.log("not found");
+
     },
 });
-//Detele
+//Detele node app/index.js delete --id="124" --title="sang ne" --description="hoc kho vaii"
 yargs.command({
     command:"delete",
     builder:{
@@ -86,8 +94,9 @@ yargs.command({
     },
     handler:(args)=>{
         const{id}=args;
-        console.log(id);
-        console.log("Detele");
+        const task=deleteTask(id);
+        if(task)console.log("task: ",task);
+        else console.log("not found ")
     },
 });
 
